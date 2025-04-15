@@ -92,6 +92,19 @@ axis equal;shading interp;colormap jet
 xlabel("x (um)") ; ylabel("y (um)")
 saveas(gcf  ,outPath+"Hz_amplitude.png");
 
+%%
+close all;
+sf = { "Ex" , "Ey" , "Ez" , "Hx" , "Hy" , "Hz" };
+
+for i=1:6
+figure
+f = eval( " abs(" + sf{i} + "(:,:,mode)) " );
+pcolor(X,Y,f);subtitle(sf{i});colorbar;
+axis equal;shading interp;colormap jet
+xlabel("x (um)") ; ylabel("y (um)")
+saveas(gcf  ,outPath+sf{i}+"_amplitude.png");
+end
+
 %% EH intensity
  
 figure;

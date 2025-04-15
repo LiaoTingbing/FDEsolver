@@ -52,45 +52,18 @@ Hamp  =  sqrt(abs(Hx).^2 + abs(Hy).^2 + abs(Hy).^2 );
 %% 
 
 outPath = "images/";
-
-mode = 3;
+mode = 1;
 [X,Y]  =ndgrid(x,y);
 
+sf = { "Ex" , "Ey" , "Ez" , "Hx" , "Hy" , "Hz" };
+for i=1:6
 figure
-pcolor(X,Y,(abs(Ex(:,:,mode))));subtitle("Ex");colorbar;
-axis equal;shading interp;colormap jet;
-xlabel("x (um)") ; ylabel("y (um)")
-saveas(gcf  ,outPath+"Ex_amplitude.png");
-
-figure
-pcolor(X,Y,abs(Ey(:,:,mode))); subtitle("Ey");colorbar;
+f = eval( " abs(" + sf{i} + "(:,:,mode)) " );
+pcolor(X,Y,f);subtitle(sf{i});colorbar;
 axis equal;shading interp;colormap jet
 xlabel("x (um)") ; ylabel("y (um)")
-saveas(gcf  ,outPath+"Ey_amplitude.png");
-
-figure
-pcolor(X,Y,abs(Ez(:,:,mode)));subtitle("Ez");colorbar;
-axis equal;shading interp;colormap jet
- xlabel("x (um)") ; ylabel("y (um)")
- saveas(gcf  ,outPath+"Ez_amplitude.png");
-
-figure
-pcolor(X,Y,abs(Hx(:,:,mode)));subtitle("Hx");colorbar;
-axis equal;shading interp;colormap jet
-xlabel("x (um)") ; ylabel("y (um)")
-saveas(gcf  ,outPath+"Hx_amplitude.png");
-
-figure
-pcolor(X,Y,abs(Hy(:,:,mode)));subtitle("Hy");colorbar;
-axis equal;shading interp;colormap jet
-xlabel("x (um)") ; ylabel("y (um)")
-saveas(gcf  ,outPath+"Hy_amplitude.png");
-
-figure
-pcolor(X,Y,abs(Hz(:,:,mode)));subtitle("Hz");colorbar;
-axis equal;shading interp;colormap jet
-xlabel("x (um)") ; ylabel("y (um)")
-saveas(gcf  ,outPath+"Hz_amplitude.png");
+saveas(gcf  ,outPath+ "mode" + num2str(mode)+"_"+ sf{i}+"_amplitude.png");
+end
 
 %% EH intensity
  
