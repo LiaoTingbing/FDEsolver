@@ -49,10 +49,5 @@ public:
 	void init();
 	void solve_eigen_meta();
 	void saveTXT(string OutputPath = "Output/");
-
-	void run();
-
-
-
 };
 

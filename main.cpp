@@ -8,11 +8,20 @@
 
 int main()
 {
+    string model;
+     model  = "waveguide";
+     //model = "fiber";
+     double lambda = 1.5e-6;
+     double guess = 3.4; 
+     int nmodes = 20;
 
-    Device device("E:\\研究生\\FDE\\20250412_3D\\lumerical");
-    FDE fde(device,1.5e-6,3.4,20);
+
+    Device device("Input/" + model);
+    FDE fde(device,lambda,guess,nmodes);
  
-    fde.run();
+    fde.init();
+    fde.solve_eigen_meta();
+    fde.saveTXT("Output\\" + model);  // windows system 创建目录反斜杠
 
     return 0;
 }

@@ -147,8 +147,10 @@ void FDE::solve_eigen_meta()
 
 void FDE::saveTXT(string OutputPath)
 {
-	string Opfile = "Output/";
-	system("mkdir Output");
+	string Opfile = OutputPath;
+	string command = "mkdir ";
+	string s =  command +  OutputPath;
+	system(s.c_str());
 
 	mat Ex_real = real(Ex);
 	mat Ex_imag = imag(Ex);
@@ -193,11 +195,6 @@ void FDE::saveTXT(string OutputPath)
 	system("pause");
 }
 
-void FDE::run()
-{
-	init();
-	solve_eigen_meta();
-	saveTXT();
-}
+ 
 
 

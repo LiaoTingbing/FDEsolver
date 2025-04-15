@@ -24,7 +24,19 @@ $neff = \frac{c\beta}{\omega}$
 ### 矩形波导
 
 结构模型
-![矩形波导模型](images/rectangleWaveguide/MODEL.png)
+![alt text](images/waveguide/model.png)
+
+
+|参数|值
+|---|---|
+|波长|1.5um
+|cell x|120|
+|cell y|120|
+
+
+|模式|结果|
+|---|---|
+|1|[你好](images/waveguide/mode.md)|
 
 
 ### 光纤
