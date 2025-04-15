@@ -10,7 +10,7 @@ $E_x (x,y)e^{i (-\omega t + \beta z)}$
 
 $H_x (x,y)e^{i (-\omega t + \beta z)}$
 
-其中，$\omega$为角频率，$\beta$为传播常数。模态有效折射率定义为
+其中， $\omega$ 为角频率， $\beta$ 为传播常数。模态有效折射率定义为
 
 $neff = \frac{c\beta}{\omega}$
 
