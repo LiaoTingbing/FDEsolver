@@ -1,3 +1,42 @@
+<style type="text/css">
+    h1 { counter-reset: h2counter; }
+    h2 { counter-reset: h3counter; }
+    h3 { counter-reset: h4counter; }
+    h4 { counter-reset: h5counter; }
+    h5 { counter-reset: h6counter; }
+    h6 { }
+    h2:before {
+      counter-increment: h2counter;
+      content: counter(h2counter) ".\0000a0\0000a0";
+    }
+    h3:before {
+      counter-increment: h3counter;
+      content: counter(h2counter) "."
+                counter(h3counter) ".\0000a0\0000a0";
+    }
+    h4:before {
+      counter-increment: h4counter;
+      content: counter(h2counter) "."
+                counter(h3counter) "."
+                counter(h4counter) ".\0000a0\0000a0";
+    }
+    h5:before {
+      counter-increment: h5counter;
+      content: counter(h2counter) "."
+                counter(h3counter) "."
+                counter(h4counter) "."
+                counter(h5counter) ".\0000a0\0000a0";
+    }
+    h6:before {
+      counter-increment: h6counter;
+      content: counter(h2counter) "."
+                counter(h3counter) "."
+                counter(h4counter) "."
+                counter(h5counter) "."
+                counter(h6counter) ".\0000a0\0000a0";
+    }
+</style>
+
 # FDEsolver 求解器
 
 
@@ -23,10 +62,29 @@ $neff = \frac{c\beta}{\omega}$
 
 ### 矩形波导
 
-结构模型
+#### 结构模型
 ![alt text](images/waveguide/model.png)
 
+#### 仿真参数
+|参数|值
+|---|---|
+|波长|1.5um
+|cell x|120|
+|cell y|120|
 
+#### 仿真结果
+|模式|结果|
+|---|---|
+|1|[mode1](images/waveguide/mode1.md)|
+|2|[mode2](images/waveguide/mode2.md )|
+
+
+### 光纤
+
+#### 模型
+![alt text](images/fiber/model.png)
+
+#### 仿真参数
 |参数|值
 |---|---|
 |波长|1.5um
@@ -34,17 +92,16 @@ $neff = \frac{c\beta}{\omega}$
 |cell y|120|
 
 
+#### 仿真结果
 |模式|结果|
 |---|---|
-|1|[你好](images/waveguide/mode.md)|
-
-
-### 光纤
-
+|1|[mode1](images/fiber/mode1.md)|
+|2|[mode2]( images/fiber/mode2.md)|
 
 
 
 
+## 参考文献
 
-
+[Full-vectorial finite-difference analysis of microstructured optical fibers](<reference/Zhu 和 Brown - 2002 - Full-vectorial finite-difference analysis of micro.pdf>)
 

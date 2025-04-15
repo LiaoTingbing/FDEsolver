@@ -9,10 +9,10 @@
 int main()
 {
     string model;
-     model  = "waveguide";
-     //model = "fiber";
+     //model  = "waveguide";
+     model = "fiber";
      double lambda = 1.5e-6;
-     double guess = 3.4; 
+     double guess = 1.45; 
      int nmodes = 20;
 
 

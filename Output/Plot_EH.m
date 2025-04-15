@@ -4,7 +4,7 @@ close all;
 clear ;
 
 model = "waveguide";
-% model = "fiber";
+model = "fiber";
 inPath = model + "\";
 
 %%  LOAD DATA
@@ -56,7 +56,7 @@ Hamp  =  sqrt(abs(Hx).^2 + abs(Hy).^2 + abs(Hy).^2 );
 
 
 
-for i =progress(1:5) 
+for i =progress(1:2) 
     % mode = 3;
     mode = i;
     outPath = inPath +"mode" + num2str(mode) + "\";
