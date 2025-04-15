@@ -12,6 +12,32 @@ class FDE
 	double guess;
 	int nmodes;
 
+	size_t Nx, Ny, ng;
+	double dx, dy, k0;
+
+	cx_vec NEFF;
+	cx_mat Ex, Ey, Ez;
+	cx_mat Hx, Hy, Hz;
+
+	//string OutputPath;
+
+	//vec neff_real;
+	//vec neff_imag;
+
+	//mat Ex_real;
+	//mat Ex_imag ;
+	//mat Ey_real;
+	//mat Ey_imag ;
+	//mat Ez_real ;
+	//mat Ez_imag ;
+
+	//mat Hx_real ;
+	//mat Hx_imag ;
+	//mat Hy_real ;
+	//mat Hy_imag ;
+	//mat Hz_real ;
+	//mat Hz_imag ;
+
 public:
 	FDE();
 
@@ -20,11 +46,11 @@ public:
  
 	~FDE();
 
-	void solve();
-	void solve_eigen();
-
-
+	void init();
 	void solve_eigen_meta();
+	void saveTXT(string OutputPath = "Output/");
+
+	void run();
 
 
 

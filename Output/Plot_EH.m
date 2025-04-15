@@ -50,55 +50,66 @@ Hz = reshape(Hz , length(x) , length(y) , []);
 Eamp  =  sqrt(abs(Ex).^2 + abs(Ey).^2 + abs(Ey).^2 );
 Hamp  =  sqrt(abs(Hx).^2 + abs(Hy).^2 + abs(Hy).^2 );
 %% 
- 
-[X,Y]  =ndgrid(x,y);
+
+outPath = "images/";
+
 mode = 3;
+[X,Y]  =ndgrid(x,y);
 
-% figure
-% pcolor(X,Y,(abs(Ex(:,:,mode))));subtitle("Ex");colorbar;
-% axis equal;shading interp;colormap jet;
-% xlabel("x (um)") ; ylabel("y (um)")
-% 
-% 
-% figure
-% pcolor(X,Y,abs(Ey(:,:,mode))); subtitle("Ey");colorbar;
-% axis equal;shading interp;colormap jet
-% xlabel("x (um)") ; ylabel("y (um)")
-% 
-% figure
-% pcolor(X,Y,abs(Ez(:,:,mode)));subtitle("Ez");colorbar;
-% axis equal;shading interp;colormap jet
-%  xlabel("x (um)") ; ylabel("y (um)")
-% 
-% figure
-% pcolor(X,Y,abs(Hx(:,:,mode)));subtitle("Hx");colorbar;
-% axis equal;shading interp;colormap jet
-% xlabel("x (um)") ; ylabel("y (um)")
-% 
-% figure
-% pcolor(X,Y,abs(Hy(:,:,mode)));subtitle("Hy");colorbar;
-% axis equal;shading interp;colormap jet
-% xlabel("x (um)") ; ylabel("y (um)")
-% 
-% figure
-% pcolor(X,Y,abs(Hz(:,:,mode)));subtitle("Hz");colorbar;
-% axis equal;shading interp;colormap jet
-% xlabel("x (um)") ; ylabel("y (um)")
-
-%%
-
-% subplot(1,2,1)
 figure
+pcolor(X,Y,(abs(Ex(:,:,mode))));subtitle("Ex");colorbar;
+axis equal;shading interp;colormap jet;
+xlabel("x (um)") ; ylabel("y (um)")
+saveas(gcf  ,outPath+"Ex_amplitude.png");
+
+figure
+pcolor(X,Y,abs(Ey(:,:,mode))); subtitle("Ey");colorbar;
+axis equal;shading interp;colormap jet
+xlabel("x (um)") ; ylabel("y (um)")
+saveas(gcf  ,outPath+"Ey_amplitude.png");
+
+figure
+pcolor(X,Y,abs(Ez(:,:,mode)));subtitle("Ez");colorbar;
+axis equal;shading interp;colormap jet
+ xlabel("x (um)") ; ylabel("y (um)")
+ saveas(gcf  ,outPath+"Ez_amplitude.png");
+
+figure
+pcolor(X,Y,abs(Hx(:,:,mode)));subtitle("Hx");colorbar;
+axis equal;shading interp;colormap jet
+xlabel("x (um)") ; ylabel("y (um)")
+saveas(gcf  ,outPath+"Hx_amplitude.png");
+
+figure
+pcolor(X,Y,abs(Hy(:,:,mode)));subtitle("Hy");colorbar;
+axis equal;shading interp;colormap jet
+xlabel("x (um)") ; ylabel("y (um)")
+saveas(gcf  ,outPath+"Hy_amplitude.png");
+
+figure
+pcolor(X,Y,abs(Hz(:,:,mode)));subtitle("Hz");colorbar;
+axis equal;shading interp;colormap jet
+xlabel("x (um)") ; ylabel("y (um)")
+saveas(gcf  ,outPath+"Hz_amplitude.png");
+
+%% EH intensity
+ 
+figure;
 pcolor(X,Y,abs(Eamp(:,:,mode)));subtitle("E intensity");colorbar;
 axis equal;shading interp;colormap jet
 xlabel("x (um)") ; ylabel("y (um)")
+E_intensity=gcf;
 
 figure
-% subplot(1,2,2)
 pcolor(X,Y,abs(Hamp(:,:,mode)));subtitle("H intensity");colorbar;
 axis equal;shading interp;colormap jet
 xlabel("x (um)") ; ylabel("y (um)")
+H_intensity = gcf;
  
 
 
  
+%% save png
+
+saveas( E_intensity , "images/E_intensity.png")
+saveas( H_intensity , "images/H_intensity.png")
