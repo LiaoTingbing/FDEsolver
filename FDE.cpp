@@ -1,4 +1,4 @@
-#pragma once
+ï»¿#pragma once
 
 #include "FDE.h"
 
@@ -94,11 +94,25 @@ void FDE::solve_eigen_meta()
 
 	// Solve Eigs
 	SparseMatrix<double> P4_ = armaToEigenSparseManual(PQ);
-	double sigma = guess * guess;    // Shift Öµ (Òª²éÕÒ½Ó½ü 10.0 µÄÌØÕ÷Öµ)
+	double sigma = guess * guess;    // Shift å€¼ (è¦æŸ¥æ‰¾æ¥è¿‘ 10.0 çš„ç‰¹å¾å€¼)
 	VectorXcd eigval;
 	MatrixXcd eigvec;
 	sparseEigs(eigval, eigvec,
 		P4_, nmodes, sigma);
+
+	// ARMA eigs
+
+	cx_vec eigvala;
+	cx_mat eigveca;
+
+	eigs_gen(eigvala, eigveca, PQ, nmodes, sigma);  // find 5 eigenvalues/eigenvectors
+	eigvala = sqrt(eigvala);
+	eigvala.print();
+	//eigs_opts opts;
+	//opts.maxiter = 10000;            // increase max iterations to 10000
+
+	//eigs_gen(eigval, eigvec, A, 5, "lm", opts);
+	//
 
 	cx_vec D(eigval.size());
 	cx_mat Et(eigvec.rows(), eigvec.cols());

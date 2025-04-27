@@ -9,8 +9,8 @@
 
 //#define ARMA_USE_ARPACK 
 //#define ARMA_USE_SUPERLU
-//#define ARMA_USE_SUPERLU    
-////#define ARMA_USE_ARPACK   
+#define ARMA_USE_SUPERLU    
+#define ARMA_USE_ARPACK   
 //#define ARMA_SUPERLU_INCLUDE_DIR  E:/VisualStudioFiles/VCPKG/vcpkg-master/vcpkg-master/packages/superlu_x64-windows/include/
 
 //#include <arpack/arpack.h>
