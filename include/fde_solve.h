@@ -1,0 +1,44 @@
+﻿#pragma once
+
+#include "common.h"
+#include "dxdx_function.h"
+#include "dxdy_function.h"
+#include "dydx_function.h"
+#include "dydy_function.h"
+
+
+
+class FdeSolve
+{
+
+public:
+	FdeSolve();
+	FdeSolve(map<string, cube>* dev);
+
+	~FdeSolve();
+
+	void initialize();
+
+	//传入各向同性材料
+	void calculateIsotropicPMatrix( );
+
+	void calculateCharacteristicValues();
+
+
+private:
+	map<string, cube>* dev_;
+
+	sp_mat Pxx_;
+	sp_mat Pyy_;
+	sp_mat Pxy_;
+	sp_mat Pyx_;
+
+	double lambda_;
+	double k0_;
+	int nx_;
+	int ny_;
+	int nt_;
+	double dx_;
+	double dy_;
+};
+ 
