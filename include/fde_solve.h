@@ -28,10 +28,10 @@ public:
 private:
 	map<string, cube>* dev_;
 
-	sp_mat Pxx_;
-	sp_mat Pyy_;
-	sp_mat Pxy_;
-	sp_mat Pyx_;
+	sp_cx_mat Pxx_;
+	sp_cx_mat Pyy_;
+	sp_cx_mat Pxy_;
+	sp_cx_mat Pyx_;
 
 	double lambda_;
 	double k0_;
@@ -40,5 +40,7 @@ private:
 	int nt_;
 	double dx_;
 	double dy_;
+	vec x_; 
+	vec y_;
 };
  

@@ -7,3 +7,5 @@
 /lumerical
 /x64
 /doc
+/matlab
+*.h5

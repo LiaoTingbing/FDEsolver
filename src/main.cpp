@@ -9,7 +9,7 @@ int main() {
 	string filePath = "lumerical/lumerical.h5";
 
 	field<string> dataSetName{
-		"indexX","indexY","indexZ",
+		"indexX","indexY","indexZ","indexXY","indexYX",
 		"x","y","lambda"
 	};
 	
