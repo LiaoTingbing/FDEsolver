@@ -1,7 +1,4 @@
-#pragma once
-
-
-
+﻿#pragma once
 
 
 #include <Spectra/MatOp/SparseGenMatProd.h>
