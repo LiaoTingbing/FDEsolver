@@ -15,11 +15,17 @@ neff  = h5read(filename , '/neff');
 
 %%
 close
-for i=1:40
-pcolor(reshape(field.real(1:nx*ny,i),nx,[]))
+modeselect = 2;       % 基模1
+componentselect = 2 ;     % 1为Ex % 2为Ey
+fieldcomponent = {"Ex" , "Ey"};
+start = (componentselect-1)*nx*ny+1;
+for i=modeselect
+pcolor(reshape(field.real(start:start+nx*ny-1,i),nx,[]))
 shading interp
+title( "模式" + num2str(modeselect) + "   "+ fieldcomponent{componentselect}+ "   有效折射率   "+num2str(neff.real(i)))
 colormap jet
 colorbar
 pause(1)
 axis equal
+saveas(gcf,"../doc/images/fiber/mode"+num2str(modeselect)+fieldcomponent{componentselect}+".png")
 end

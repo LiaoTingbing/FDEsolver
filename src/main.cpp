@@ -14,8 +14,8 @@ int main() {
 	};
 	
 	double lambda = 1.55e-6;	//波长
-	int nmodes = 40;			//模式数量
-	double search = 3.4;			//搜索附近值
+	int nmodes = 10;			//模式数量
+	double search = 1.45;			//搜索附近值
 	map<string, cube> dev;
 	loadHdf5Data(dev , filePath , dataSetName);
 

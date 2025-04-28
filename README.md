@@ -20,52 +20,31 @@ $neff = \frac{c\beta}{\omega}$
 
 ## 全矢量各向异性模式求解
  
+对如下的各向异性材料
+![alt text](doc/images/math/anisotropicmaterial.png)
+求解全矢量模型
 
  [ 数学原理](doc/BPM全矢量解模.pdf)
 
 ## 测试模型
 
-
-
-
 ### 矩形波导
-
-#### 结构模型
-![alt text](images/waveguide/model.png)
-
-#### 仿真参数
-|参数|值
-|---|---|
-|波长|1.5um
-|cell x|120|
-|cell y|120|
+![alt text](doc/images/waveguide/waveguide.png)
 
 #### 仿真结果
-|模式|结果|
-|---|---|
-|1|[mode1](images/waveguide/mode1.md)|
-|2|[mode2](images/waveguide/mode2.md )|
-
+![alt text](doc/images/waveguide/mode1Ex.png)
+![alt text](doc/images/waveguide/mode1Ey.png)
 
 ### 光纤
 
 #### 模型
-![alt text](images/fiber/model.png)
 
-#### 仿真参数
-|参数|值
-|---|---|
-|波长|1.5um
-|cell x|120|
-|cell y|120|
-
+![alt text](doc/images/fiber/model.png)
 
 #### 仿真结果
-|模式|结果|
-|---|---|
-|1|[mode1](images/fiber/mode1.md)|
-|2|[mode2]( images/fiber/mode2.md)|
+![alt text](doc/images/fiber/mode1Ex.png)
 
+![alt text](doc/images/fiber/mode1Ey.png)
 
 ## 总结
 
