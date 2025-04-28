@@ -4,7 +4,7 @@
     <ShowAllFiles>false</ShowAllFiles>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <LocalDebuggerEnvironment>E:\VisualStudioFiles\vcpkg\vcpkg\installed\x64-windows\bin
+    <LocalDebuggerEnvironment>E:\VisualStudioFiles\originVcpkg\vcpkg\installed\x64-windows\bin
 $(LocalDebuggerEnvironment)</LocalDebuggerEnvironment>
     <DebuggerFlavor>WindowsLocalDebugger</DebuggerFlavor>
   </PropertyGroup>

@@ -1,5 +1,5 @@
 
-
+%基于BPM
 clear ;
 
 eps0 =8.85419e-12; 
@@ -40,15 +40,15 @@ SigmaXMax = -( 3 + 1  ) * log(R0) / 2 / Impedance / (10*dx_)     ;
 SigmaYMax = -( 3 + 1  ) * log(R0) / 2 / Impedance / (10*dy_)     ;
 
 sx = ones( nx_ , ny_ ) ;
-sx(1:11 , : ) = repmat(  1 + (( 10:-1:0)/10 ).' .^3 * SigmaXMax  / 1j / w0  /eps0  , 1 , ny_) ;
-sx(end:-1:end-10 , : ) = repmat(  1 + (( 10:-1:0)/10 ).' .^3 * SigmaXMax  / 1j / w0  /eps0  , 1 , ny_) ;
+% sx(1:11 , : ) = repmat(  1 + (( 10:-1:0)/10 ).' .^3 * SigmaXMax  / 1j / w0  /eps0  , 1 , ny_) ;
+% sx(end:-1:end-10 , : ) = repmat(  1 + (( 10:-1:0)/10 ).' .^3 * SigmaXMax  / 1j / w0  /eps0  , 1 , ny_) ;
 
 sy  = ones( nx_ , ny_ ) ;
-sy(: , 1:11 ) = repmat(  1 + (( 10:-1:0)/10 )  .^3 * SigmaXMax  / 1j / w0  /eps0  , nx_ , 1) ;
-sy(:  , end:-1:end-10 ) = repmat(  1 + (( 10:-1:0)/10 )  .^3 * SigmaXMax  / 1j / w0  /eps0  , nx_ , 1) ;
-
-sxvec =  sx(:);
-syvec =  sy(:);
+% sy(: , 1:11 ) = repmat(  1 + (( 10:-1:0)/10 )  .^3 * SigmaXMax  / 1j / w0  /eps0  , nx_ , 1) ;
+% sy(:  , end:-1:end-10 ) = repmat(  1 + (( 10:-1:0)/10 )  .^3 * SigmaXMax  / 1j / w0  /eps0  , nx_ , 1) ;
+% 
+% sxvec =  sx(:);
+% syvec =  sy(:);
 
 sx = sx(:);
 sy = sy(:);
@@ -79,21 +79,21 @@ Pyy_ = dydyfuncVec(isy, sy.*epsZ, epsY, nx_, ny_, dx_, dy_)...
 
 P = [Pxx_ , Pxy_ ; Pyx_ , Pyy_];
 
-[e ,v] = eigs(P,60,3.4*3.4*k0_*k0_);
+[e ,v] = eigs(P,20,3.4*3.4*k0_*k0_);
 
 neff = sqrt(diag(v))/k0_;
 
 ex = reshape(e(1:nx_*ny_,:),nx_,ny_,[]);
 ey = reshape(e( nx_*ny_+1:end,:),nx_,ny_,[]);
 %%
-close
-for i=1:60
-pcolor(abs(ey(:,:,i)))
-title(num2str(neff(i)))
-axis equal
-shading interp
-colormap jet
-colorbar
-pause(1)
-end
+% close
+% for i=1:10
+% pcolor(abs(ex(:,:,i)))
+% title(num2str(neff(i)))
+% axis equal
+% shading interp
+% colormap jet
+% colorbar
+% pause(1)
+% end
 %%
