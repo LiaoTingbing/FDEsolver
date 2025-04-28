@@ -29,42 +29,70 @@ void FdeSolve::initialize()
 
 }
 
+void FdeSolve::computePML(int layersPML)
+{
+	//int layersPML = 10 ;
+	cout << "\t初始化PML参数\tPML层数：" << layersPML << "\n";
+	cx_mat sx(nx_, ny_, fill::ones);
+	cx_mat sy(nx_, ny_, fill::ones);
+	if (layersPML != 0) {
+		int m = 3;
+		double omega = C0 * k0_;
+		const double R0 = 1e-6;
+		double sigmaXMax = -(m + 1) * log10(R0) / (2 * 373 * dx_ * layersPML);
+		double sigmaYMax = -(m + 1) * log10(R0) / (2 * 373 * dy_ * layersPML);
+
+		cx_double value;
+		for (int i = 0;i < layersPML + 1;i++) {
+
+			value = 1.0 + sigmaXMax * pow((layersPML - i + 0.0) / layersPML, m) / (IU * omega * EPS0);
+			sx.row(i) = cx_rowvec(ny_, fill::value(value));
+			sx.row(nx_ - 1 - i) = sx.row(i);
+
+			value = 1.0 + sigmaYMax * pow((layersPML - i + 0.0) / layersPML, m) / (IU * omega * EPS0);
+			sy.col(i) = cx_vec(nx_, fill::value(value));
+			sy.col(ny_ - 1 - i) = sy.col(i);
+
+		}
+	}
+
+	sx_ = sx.as_col();
+	sy_ = sy.as_col();
+	isx_ = 1 / sx_;
+	isy_ = 1 / sy_;
+}
+
 void FdeSolve::calculateIsotropicPMatrix()
 {
 	cx_vec epsZ = vectorise((*dev_)["indexZ"]) + 0.0 * IU;
-	//cx_vec epsX = vectorise((*dev_)["indexX"]) + 0.0 * IU;
-	//cx_vec epsY = vectorise((*dev_)["indexY"]) + 0.0 * IU;
-	cx_vec epsX = epsZ;
-	cx_vec epsY = epsZ;
+	cx_vec epsX = vectorise((*dev_)["indexX"]) + 0.0 * IU;
+	cx_vec epsY = vectorise((*dev_)["indexY"]) + 0.0 * IU;
+	//cx_vec epsX = epsZ;
+	//cx_vec epsY = epsZ;
 	cx_vec epsXY = vectorise((*dev_)["indexXY"]) + 0.0 * IU;
 	cx_vec epsYX = vectorise((*dev_)["indexYX"]) + 0.0 * IU;
 
-
-
-
 	cx_vec full1ColumnVector(nt_, fill::ones);
 
-	Pxx_ = dxdxFunc(full1ColumnVector,
-		epsZ, epsX, nx_, ny_, dx_, dy_)
-		+ dydyFunc(full1ColumnVector, full1ColumnVector,
-			full1ColumnVector, nx_, ny_, dx_, dy_)
+	Pxx_ = dxdxFunc(isx_,sx_%epsZ, epsX, nx_, ny_, dx_, dy_)
+		+ dydyFunc(isy_, sy_,full1ColumnVector, nx_, ny_, dx_, dy_)
 		+ spdiags(k0_ * k0_ * epsX, ivec{ 0 }, nt_, nt_)
-		+ dxdyFunc(full1ColumnVector, epsZ, epsYX, nx_, ny_, dx_, dy_);
+		+ dxdyFunc(isx_, sy_%epsZ, epsYX, nx_, ny_, dx_, dy_);
 
-	Pxy_ = dxdyFunc(full1ColumnVector, epsZ, epsY, nx_, ny_, dx_, dy_)
-		- dxdyFunc(full1ColumnVector, full1ColumnVector, full1ColumnVector, nx_, ny_, dx_, dy_)
+	Pxy_ = dxdyFunc(isx_, sy_%epsZ, epsY, nx_, ny_, dx_, dy_)
+		- dxdyFunc(isx_, sy_, full1ColumnVector, nx_, ny_, dx_, dy_)
 		+ spdiags(k0_ * k0_ * epsXY, ivec{ 0 }, nt_, nt_)
-		+ dxdxFunc(full1ColumnVector, epsZ, epsXY, nx_, ny_, dx_, dy_);
+		+ dxdxFunc(isx_, sx_%epsZ, epsXY, nx_, ny_, dx_, dy_);
 
-	Pyx_ = dydxFunc(full1ColumnVector, epsZ, epsX, nx_, ny_, dx_, dy_)
-		- dydxFunc(full1ColumnVector, full1ColumnVector, full1ColumnVector, nx_, ny_, dx_, dy_)
+	Pyx_ = dydxFunc(isy_, sx_%epsZ, epsX, nx_, ny_, dx_, dy_)
+		- dydxFunc(isy_, sx_, full1ColumnVector, nx_, ny_, dx_, dy_)
 		+ spdiags(k0_ * k0_ * epsYX, ivec{ 0 }, nt_, nt_)
-		+ dydyFunc(full1ColumnVector, epsZ, epsYX, nx_, ny_, dx_, dy_);
+		+ dydyFunc(isy_, sy_%epsZ, epsYX, nx_, ny_, dx_, dy_);
 
-	Pyy_ = dydyFunc(full1ColumnVector, epsZ, epsY, nx_, ny_, dx_, dy_)
-		+ dxdxFunc(full1ColumnVector, full1ColumnVector, full1ColumnVector, nx_, ny_, dx_, dy_)
+	Pyy_ = dydyFunc(isy_, sy_%epsZ, epsY, nx_, ny_, dx_, dy_)
+		+ dxdxFunc(isx_, sx_, full1ColumnVector, nx_, ny_, dx_, dy_)
 		+ spdiags(k0_ * k0_ * epsY, ivec{ 0 }, nt_, nt_)
-		+ dydxFunc(full1ColumnVector, epsZ, epsXY, nx_, ny_, dx_, dy_);
+		+ dydxFunc(isy_, sx_%epsZ, epsXY, nx_, ny_, dx_, dy_);
 }
 
 void FdeSolve::calculateCharacteristicValues()
@@ -81,9 +109,9 @@ void FdeSolve::calculateCharacteristicValues()
 	cx_mat fieldValue;
  
 	cx_double sigma = 3.4*3.4*k0_*k0_ + 0.0*IU;
-	arma::eigs_gen(betaValue, fieldValue, real (pMatrix),20, sigma);
-	betaValue = sqrt(betaValue) / k0_;
-	betaValue.print();
+	arma::eigs_gen(betaValue, fieldValue, pMatrix,20, sigma);
+	cx_vec neff = sqrt(betaValue) / k0_;
+	neff.print();
 
 	string outFilePath = "matlab/out.h5";
 
@@ -91,8 +119,5 @@ void FdeSolve::calculateCharacteristicValues()
 	fieldAbs.save(hdf5_name(outFilePath,"/fieldAbs"));
 	x_.save(hdf5_name(outFilePath, "/x",hdf5_opts::append));
 	y_.save(hdf5_name(outFilePath, "/y", hdf5_opts::append));
-
-
-
 
 }

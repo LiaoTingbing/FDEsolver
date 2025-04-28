@@ -19,6 +19,8 @@ public:
 
 	void initialize();
 
+	void computePML(int layersPML = 10);
+
 	//传入各向同性材料
 	void calculateIsotropicPMatrix( );
 
@@ -42,5 +44,12 @@ private:
 	double dy_;
 	vec x_; 
 	vec y_;
+
+	cx_vec sx_;
+	cx_vec sy_;
+	cx_vec isx_;
+	cx_vec isy_;
+
+
 };
  

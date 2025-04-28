@@ -13,8 +13,9 @@ int main() {
 
 	cx_vec eigval;
 	cx_mat eigvec;
+	cx_double sigma = 1.0;
 
-	eigs_gen(eigval, eigvec, A, 5);  // find 5 eigenvalues/eigenvectors
+	eigs_gen(eigval, eigvec, A, 5 , sigma);  // find 5 eigenvalues/eigenvectors
 
 	eigs_opts opts;
 	opts.maxiter = 10000;            // increase max iterations to 10000

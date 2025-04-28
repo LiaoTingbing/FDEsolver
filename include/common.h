@@ -1,15 +1,18 @@
 ﻿
 #pragma once
 
+ 
 #define ARMA_USE_HDF5
 #define ARMA_USE_SUPERLU
 #define ARMA_USE_ARPACK
 #include <armadillo>
 #include<cstring>
 #include<ctime>
+ 
 
 using namespace std;
 using namespace arma;
+ 
 
 const double EPS0 = 8.85419e-12;
 const double PI = 3.14159;

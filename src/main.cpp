@@ -18,6 +18,7 @@ int main() {
 
 	FdeSolve fde(&dev);
 	fde.initialize();
+	fde.computePML(10);
 	fde.calculateIsotropicPMatrix();
 	fde.calculateCharacteristicValues();
 
