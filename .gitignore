@@ -6,7 +6,10 @@
 /FDEsolver/x64
 /lumerical
 /x64
-/doc
+
 /matlab
 *.h5
 *.pptx
+
+doc/reference
+doc/images
