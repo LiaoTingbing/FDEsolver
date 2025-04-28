@@ -4,9 +4,15 @@ FdeSolve::FdeSolve() {
 
 }
 
-FdeSolve::FdeSolve(map<string, cube>* dev)
+ 
+FdeSolve::FdeSolve(map<string, cube>* dev, double lambda, int nmodes, double search)
 {
 	dev_ = dev;
+	lambda_ = lambda;
+	nmodes_ = nmodes;
+	search_ = search;
+	k0_ = 2 * PI / lambda_;
+
 }
 
 FdeSolve::~FdeSolve()
@@ -15,8 +21,8 @@ FdeSolve::~FdeSolve()
 
 void FdeSolve::initialize()
 {
-	lambda_ = (*dev_)["lambda"](0);
-	cout << "\tlambda\t" << lambda_;
+	
+	cout << "\tlambda\t" << lambda_ << endl;;
 	x_ = vectorise((*dev_)["x"]);
 	y_ = vectorise((*dev_)["y"]);
 
@@ -26,7 +32,6 @@ void FdeSolve::initialize()
 	nx_ = (*dev_)["x"].n_elem;
 	ny_ = (*dev_)["y"].n_elem;
 	nt_ = nx_ * ny_;
-	k0_ = 2 * PI / lambda_;
 
 }
 
@@ -122,7 +127,8 @@ void FdeSolve::initialize()
 
 void FdeSolve::calculatePECBoundary()
 {
-	cout << "\t计算PEC边界";
+	cout << "\t计算PEC边界\n";
+	clock_t t1 = clock();
 	vec epsZ = vectorise((*dev_)["indexZ"]) ;
 	vec epsX = vectorise((*dev_)["indexX"]) ;
 	vec epsY = vectorise((*dev_)["indexY"])  ;
@@ -130,51 +136,65 @@ void FdeSolve::calculatePECBoundary()
 	vec epsYX = vectorise((*dev_)["indexYX"])  ;
 
 	vec unitColumnVector(nt_, fill::ones);
-	vec sx_ = ones(nt_);
-	vec sy_ = ones(nt_);
+	vec sx = ones(nt_);
+	vec sy = ones(nt_);
 
-
-	sp_mat Pxx_ = dxdxFunc(sx_, sx_ % epsZ, epsX, nx_, ny_, dx_, dy_)
-		+ dydyFunc(sy_, sy_, unitColumnVector, nx_, ny_, dx_, dy_)
+	//计算P矩阵
+	cout << "\t计算P矩阵\n";
+	sp_mat Pxx = dxdxFunc(sx, sx % epsZ, epsX, nx_, ny_, dx_, dy_)
+		+ dydyFunc(sy, sy, unitColumnVector, nx_, ny_, dx_, dy_)
 		+ spdiags(k0_ * k0_ * epsX, ivec{ 0 }, nt_, nt_)
-		+ dxdyFunc(sx_, sy_ % epsZ, epsYX, nx_, ny_, dx_, dy_);
+		+ dxdyFunc(sx, sy % epsZ, epsYX, nx_, ny_, dx_, dy_);
 
-	sp_mat Pxy_ = dxdyFunc(sx_, sy_ % epsZ, epsY, nx_, ny_, dx_, dy_)
-		- dxdyFunc(sx_, sy_, unitColumnVector, nx_, ny_, dx_, dy_)
+	sp_mat Pxy = dxdyFunc(sx, sy % epsZ, epsY, nx_, ny_, dx_, dy_)
+		- dxdyFunc(sx, sy, unitColumnVector, nx_, ny_, dx_, dy_)
 		+ spdiags(k0_ * k0_ * epsXY, ivec{ 0 }, nt_, nt_)
-		+ dxdxFunc(sx_, sx_ % epsZ, epsXY, nx_, ny_, dx_, dy_);
+		+ dxdxFunc(sx, sx % epsZ, epsXY, nx_, ny_, dx_, dy_);
 
-	sp_mat Pyx_ = dydxFunc(sy_, sx_ % epsZ, epsX, nx_, ny_, dx_, dy_)
-		- dydxFunc(sy_, sx_, unitColumnVector, nx_, ny_, dx_, dy_)
+	sp_mat Pyx = dydxFunc(sy, sx % epsZ, epsX, nx_, ny_, dx_, dy_)
+		- dydxFunc(sy, sx, unitColumnVector, nx_, ny_, dx_, dy_)
 		+ spdiags(k0_ * k0_ * epsYX, ivec{ 0 }, nt_, nt_)
-		+ dydyFunc(sy_, sy_ % epsZ, epsYX, nx_, ny_, dx_, dy_);
+		+ dydyFunc(sy, sy % epsZ, epsYX, nx_, ny_, dx_, dy_);
 
-	sp_mat Pyy_ = dydyFunc(sy_, sy_ % epsZ, epsY, nx_, ny_, dx_, dy_)
-		+ dxdxFunc(sx_, sx_, unitColumnVector, nx_, ny_, dx_, dy_)
+	sp_mat Pyy = dydyFunc(sy, sy % epsZ, epsY, nx_, ny_, dx_, dy_)
+		+ dxdxFunc(sx, sx, unitColumnVector, nx_, ny_, dx_, dy_)
 		+ spdiags(k0_ * k0_ * epsY, ivec{ 0 }, nt_, nt_)
-		+ dydxFunc(sy_, sx_ % epsZ, epsXY, nx_, ny_, dx_, dy_);
+		+ dydxFunc(sy, sx % epsZ, epsXY, nx_, ny_, dx_, dy_);
 
-	cout << "\n\t计算特征值\n";
+	cout << "\t计算特征值\n";
 	sp_mat pMatrix(2 * nt_, 2 * nt_);
-	pMatrix(0, 0, size(nt_, nt_)) = Pxx_;
-	pMatrix(0, nt_, size(nt_, nt_)) = Pxy_;
-	pMatrix(nt_, 0, size(nt_, nt_)) = Pyx_;
-	pMatrix(nt_, nt_, size(nt_, nt_)) = Pyy_;
-
+	pMatrix(0, 0, size(nt_, nt_)) = Pxx;
+	pMatrix(0, nt_, size(nt_, nt_)) = Pxy;
+	pMatrix(nt_, 0, size(nt_, nt_)) = Pyx;
+	pMatrix(nt_, nt_, size(nt_, nt_)) = Pyy;
 
 	cx_vec betaValue;
 	cx_mat fieldValue;
 
-	double sigma = 3.4 * 3.4 * k0_ * k0_;
-	arma::eigs_gen(betaValue, fieldValue, pMatrix, 40, sigma);
+	double sigma = search_ * search_ * k0_ * k0_;
+	arma::eigs_gen(betaValue, fieldValue, pMatrix, nmodes_, sigma);
 	cx_vec neff = sqrt(betaValue) / k0_;
-	//neff.print();
 
+
+	// 写入文件
+	cout << "\t写入文件\n";
 	string outFilePath = "matlab/out.h5";
 
-	mat fieldAbs = abs(fieldValue);
-	fieldAbs.save(hdf5_name(outFilePath, "/fieldAbs"));
-	x_.save(hdf5_name(outFilePath, "/x", hdf5_opts::append));
-	y_.save(hdf5_name(outFilePath, "/y", hdf5_opts::append));
+	fieldValue.save(arma::hdf5_name(outFilePath, "/field"));
+	neff.save(arma::hdf5_name(outFilePath, "/neff", arma::hdf5_opts::append));
 
+	x_.save(arma::hdf5_name(outFilePath, "/x", arma::hdf5_opts::append));
+	y_.save(arma::hdf5_name(outFilePath, "/y", arma::hdf5_opts::append));
+
+
+
+	clock_t t2 = clock();
+	cout << "\t耗时\t" << double(t2 - t1) / CLOCKS_PER_SEC << "s";
+
+}
+
+sp_mat FdeSolve::DX()
+{
+	vec a = ones(nt_);
+	return sp_mat();
 }

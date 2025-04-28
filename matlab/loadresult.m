@@ -8,18 +8,18 @@ y = h5read(filename , '/y');
 nx = length(x); 
 ny = length(y);
 
-fieldAbs = h5read(filename , '/fieldAbs');
 
-pcolor(reshape(fieldAbs(1:nx*ny,5),nx,[]))
-shading interp
-colormap jet
+field  = h5read(filename , '/field');
+neff  = h5read(filename , '/neff');
+ 
 
 %%
 close
 for i=1:40
-pcolor(reshape(fieldAbs(1:nx*ny,i),nx,[]))
+pcolor(reshape(field.real(1:nx*ny,i),nx,[]))
 shading interp
 colormap jet
 colorbar
 pause(1)
+axis equal
 end

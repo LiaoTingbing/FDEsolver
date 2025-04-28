@@ -3,7 +3,7 @@
 clear ;
 
 eps0 =8.85419e-12; 
-
+mu0 = pi*4e-7;
 filename = "../lumerical/lumerical.h5";
 
 x = h5read(filename , "/x");
@@ -78,17 +78,38 @@ Pyy_ = dydyfuncVec(isy, sy.*epsZ, epsY, nx_, ny_, dx_, dy_)...
 
 
 P = [Pxx_ , Pxy_ ; Pyx_ , Pyy_];
-
-[e ,v] = eigs(P,20,3.4*3.4*k0_*k0_);
+nmodes = 20;
+[e ,v] = eigs(P,nmodes,3.4*3.4*k0_*k0_);
 
 neff = sqrt(diag(v))/k0_;
+%%
+% ex = reshape(e(1:nx_*ny_,:),nx_,ny_,[]);
+% ey = reshape(e( nx_*ny_+1:end,:),nx_,ny_,[]);
 
-ex = reshape(e(1:nx_*ny_,:),nx_,ny_,[]);
-ey = reshape(e( nx_*ny_+1:end,:),nx_,ny_,[]);
+% ex = e(1:nt_,:);
+% ey = e(nt_+1:end,:);
+% ez = zeros(size(ex));
+% hy = zeros(size(ex));
+% hx = zeros(size(ex));
+% hz = zeros(size(ex));
+ex = reshape(e(1:nt_,:),nx_,ny_,[]);
+ey = reshape(e(nt_+1:end,:),nx_,ny_,[]);
+ez = zeros(size(ex));
+for i=1:nmodes
+
+    % ez(:,:,i)
+    ex(:,:,i)
+end
+
+ 
+
+
+Ez = reshape(ez,nx_,ny_,[]);
+Hx = reshape(hx,nx_,ny_,[]);
 %%
 % close
-% for i=1:10
-% pcolor(abs(ex(:,:,i)))
+% for i=1:20
+% pcolor(abs(Hx(:,:,i)))
 % title(num2str(neff(i)))
 % axis equal
 % shading interp
@@ -97,3 +118,23 @@ ey = reshape(e( nx_*ny_+1:end,:),nx_,ny_,[]);
 % pause(1)
 % end
 %%
+%%
+function [r]=CUX(nx,ny,dx )
+
+b = -ones(nx*ny,1)/dx;
+c = ones(nx*ny,1)/dx;
+
+c(nx:nx:end)=0;
+
+r = spdiags([c,b ] , [-1  0],nx*ny,nx*ny).';
+
+end
+%%
+function [r]=CUY(nx,ny, dy)
+
+a = -ones(nx*ny,1)/dy;
+b = ones(nx*ny,1)/dy;
+
+r = spdiags([b, a] , [-nx , nx],nx*ny,nx*ny).';
+
+end

@@ -10,13 +10,16 @@ int main() {
 
 	field<string> dataSetName{
 		"indexX","indexY","indexZ","indexXY","indexYX",
-		"x","y","lambda"
+		"x","y" 
 	};
 	
+	double lambda = 1.55e-6;	//波长
+	int nmodes = 40;			//模式数量
+	double search = 3.4;			//搜索附近值
 	map<string, cube> dev;
 	loadHdf5Data(dev , filePath , dataSetName);
 
-	FdeSolve fde(&dev);
+	FdeSolve fde(&dev  ,lambda,nmodes,search);
 	fde.initialize();
 	fde.calculatePECBoundary();
  
